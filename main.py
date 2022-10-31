@@ -75,6 +75,9 @@ class MainUI(QMainWindow):
         self.second_layout = QHBoxLayout()
         self.second_day.setLayout(self.second_layout)
         self.sub_stack_widget.addWidget(self.second_day)
+        #
+        self.colorful_button = QPushButton("Click Me!")
+        self.second_layout.addWidget(self.colorful_button)
 
     def show_progressbar(self):
         self.opb.set_value()

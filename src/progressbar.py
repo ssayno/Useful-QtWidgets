@@ -25,16 +25,18 @@ class OwnProgressbar(QProgressBar):
 
     def set_value(self):
         if self.allow_next:
+            print('a')
             self.reset()
             self.allow_next = False
-            for i in range(0, 101):
+            for i in range( 101):
                 QTimer.singleShot(20 * i, lambda x=i: self.setValue(x))
 
     def value_change(self, _value):
         #if self.isMaximized(): isMaximized not useful
         if _value == self.maximum():
             self.allow_next = True
-        self._animation.start()
+        else:
+            self._animation.start()
 
     def create_panimation(self):
         if not hasattr(self, "old_value"):
