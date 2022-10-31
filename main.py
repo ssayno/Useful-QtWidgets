@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QLCDNumber, QLabel, QMainWindow, QApplication, QPushButton, QSplitter, QStackedWidget, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QSplitter, QStackedWidget, QVBoxLayout, QWidget
 from src.progressbar import OwnProgressbar
 
 class MainUI(QMainWindow):

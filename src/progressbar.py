@@ -25,8 +25,9 @@ class OwnProgressbar(QProgressBar):
 
     def set_value(self):
         if self.allow_next:
+            self.reset()
             self.allow_next = False
-            for i in range(1, 101):
+            for i in range(0, 101):
                 QTimer.singleShot(20 * i, lambda x=i: self.setValue(x))
 
     def value_change(self, _value):
