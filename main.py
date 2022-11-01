@@ -3,12 +3,14 @@ import sys
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QFrame, QGridLayout, QHBoxLayout, QLabel, QMainWindow, QApplication, QPushButton, QSplitter, QStackedWidget, QToolTip, QVBoxLayout, QWidget
 from src.progressbar import OwnProgressbar
-from src.Button.fButton import ConicalButton, LinerButton, RadialButton
+from src.Button.fButton import AnimationQPushButton, ConicalButton, ELAnimationQPushButton, LinerButton, RadialButton
 
 
 class MainUI(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.setMinimumHeight(600)
+        self.setMinimumWidth(600)
         self.cw = QWidget(self)
         self.setCentralWidget(self.cw)
         self.cw_layout = QHBoxLayout()
@@ -57,6 +59,7 @@ class MainUI(QMainWindow):
         self.first_day = QWidget(self)
         self.first_day.setStyleSheet('QLabel{border: 5px solid black;}')
         self.fd_layout = QVBoxLayout()
+        self.fd_layout.addStretch()
         self.first_day.setLayout(self.fd_layout)
         #
         self.sub_stack_widget.addWidget(self.first_day)
@@ -78,7 +81,7 @@ class MainUI(QMainWindow):
         self.second_layout = QVBoxLayout()
         self.second_layout.setStretchFactor(self, 1)
         self.second_layout.setContentsMargins(0, 0, 0, 0)
-        self.second_layout.setSpacing(0)
+        self.second_layout.setSpacing(10)
         self.second_day.setLayout(self.second_layout)
         self.sub_stack_widget.addWidget(self.second_day)
         #
@@ -95,9 +98,18 @@ class MainUI(QMainWindow):
         #
         self.radial_button = RadialButton(self)
         self.radial_button.setText('Radial Button')
+        # clicked Animation Button
+        self.click_button = AnimationQPushButton(self)
+        self.click_button.setText("click me to shake!")
+        # enter or leave animation Button
+        self.el_button = ELAnimationQPushButton(self)
+        self.el_button.setText("enter or leave show aniamtion")
+        # layout add button
         self.second_layout.addWidget(self.conical_button)
         self.second_layout.addWidget(self.linear_button)
         self.second_layout.addWidget(self.radial_button)
+        self.second_layout.addWidget(self.click_button)
+        self.second_layout.addWidget(self.el_button)
         #
 
     def show_progressbar(self):

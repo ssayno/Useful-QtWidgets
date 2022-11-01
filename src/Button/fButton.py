@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-from PyQt5.QtCore import QPoint, QPointF, Qt
-from PyQt5.QtGui import QBrush, QColor, QConicalGradient, QLinearGradient, QPaintEvent, QPainter, QPen, QRadialGradient
+import typing
+from PyQt5.QtCore import QAbstractAnimation, QEvent, QPoint, QPointF, QPropertyAnimation, QVariant, QVariantAnimation, Qt
+from PyQt5.QtGui import QBrush, QColor, QConicalGradient, QLinearGradient, QMouseEvent, QPaintEvent, QPainter, QPalette, QPen, QRadialGradient
 from PyQt5.QtWidgets import QPushButton
 
 basic_style = '''\
@@ -80,7 +81,7 @@ class RadialButton(QPushButton):
         stop: 0.5 #5FEEB8,
         stop:1 #1BDAF9);
         """
-        radial_bg = QRadialGradient(QPointF(current_half_width + self.x(), current_half_height+self.y()), 100)
+        radial_bg = QRadialGradient(QPointF(current_half_width, current_half_height), 100)
         # radial_bg = QRadialGradient(QPointF(current_half_width, current_half_height), 100)
         # radial_bg = QRadialGradient()
         #radial_bg.setCenter(QPointF(current_half_width, current_half_height))
@@ -91,3 +92,68 @@ class RadialButton(QPushButton):
         painter.setBrush(QBrush(radial_bg))
         painter.fillRect(self.rect(), radial_bg)
         return super().paintEvent(a0)
+
+
+class AnimationQPushButton(QPushButton):
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self.setMinimumWidth(100)
+        self.setMinimumHeight(100)
+        self.setStyleSheet(basic_style)
+        self.setAutoFillBackground(True)
+        self._click_animation = QPropertyAnimation(self, b'pos', self)
+        self._click_animation.setStartValue(QPoint(self.x(), self.y()))
+        self._click_animation.setEndValue(QPoint(self.x(), self.y()))
+        self._click_animation.setDuration(100)
+        self._click_animation.finished.connect(self._click_animation_finished)
+
+    def clicked_slot_func(self):
+        self._click_animation.start()
+        print("Start !!")
+
+    def _click_animation_finished(self):
+        print('Finished')
+
+
+class ELAnimationQPushButton(QPushButton):
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self.setMinimumWidth(100)
+        self.setMinimumHeight(100)
+        self.setStyleSheet(basic_style)
+        self.setAutoFillBackground(True)
+        self.create_animation()
+
+    def create_animation(self):
+        self._animation = QVariantAnimation(
+            parent=self
+        )
+        # 在设定值之前连接信号槽函数，那么在设定值的时候会运行一次
+        self._animation.valueChanged.connect(self.print_animation_current_value)
+        start_variant = QColor(173, 213, 0)
+        end_variant = QColor(50, 230, 92)
+        self._animation.setStartValue(start_variant)
+        self._animation.setEndValue(end_variant)
+        self._animation.setDuration(250)
+
+    def print_animation_current_value(self, value):
+        color = QColor(value).name()
+        qss = """
+            font-weight: bold;
+            color: black;
+        """
+        background_color = f'''\
+        background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop: 0 grey, stop: 0.4 {color}, stop: 1 white);
+        '''
+        qss += background_color
+        self.setStyleSheet(qss)
+
+    def enterEvent(self, a0: QEvent) -> None:
+        self._animation.setDirection(QAbstractAnimation.Backward)
+        self._animation.start()
+        return super().enterEvent(a0)
+
+    def leaveEvent(self, a0: QEvent) -> None:
+        self._animation.setDirection(QAbstractAnimation.Forward)
+        self._animation.start()
+        return super().leaveEvent(a0)
