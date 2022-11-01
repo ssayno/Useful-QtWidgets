@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 import sys
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QFrame, QGridLayout, QHBoxLayout, QLabel, QMainWindow, QApplication, QPushButton, QSplitter, QStackedLayout, QStackedWidget, QToolTip, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QFrame, QGridLayout, QHBoxLayout, QLabel, QMainWindow, QApplication, QPushButton, QSplitter, QStackedWidget, QToolTip, QVBoxLayout, QWidget
 from src.progressbar import OwnProgressbar
+from src.Button.fButton import ConicalButton, LinerButton, RadialButton
+
 
 class MainUI(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.resize(400, 400)
         self.cw = QWidget(self)
         self.setCentralWidget(self.cw)
         self.cw_layout = QHBoxLayout()
@@ -29,6 +30,8 @@ class MainUI(QMainWindow):
         self.add_second_day_widget()
         # connect button with slot func
         self.connect_day_button_with_slot_func()
+        # time
+        self.sub_stack_widget.setCurrentWidget(self.second_day)
 
     def set_day_button(self):
         self.day_frame = QFrame(self)
@@ -72,12 +75,30 @@ class MainUI(QMainWindow):
     # Mon Oct 31 22:20:56 2022
     def add_second_day_widget(self):
         self.second_day = QWidget(self)
-        self.second_layout = QHBoxLayout()
+        self.second_layout = QVBoxLayout()
+        self.second_layout.setStretchFactor(self, 1)
+        self.second_layout.setContentsMargins(0, 0, 0, 0)
+        self.second_layout.setSpacing(0)
         self.second_day.setLayout(self.second_layout)
         self.sub_stack_widget.addWidget(self.second_day)
         #
         self.colorful_button = QPushButton("Click Me!")
+        # self.colorful_button.setMinimumHeight(400)
         self.second_layout.addWidget(self.colorful_button)
+        #
+        self.conical_button = ConicalButton(self)
+        # self.conical_button.setMinimumHeight(400)
+        self.conical_button.setText('Conical Bg Button')
+        self.linear_button = LinerButton(self)
+        # self.linear_button.setMinimumHeight(400)
+        self.linear_button.setText("Linear Bg Button")
+        #
+        self.radial_button = RadialButton(self)
+        self.radial_button.setText('Radial Button')
+        self.second_layout.addWidget(self.conical_button)
+        self.second_layout.addWidget(self.linear_button)
+        self.second_layout.addWidget(self.radial_button)
+        #
 
     def show_progressbar(self):
         self.opb.set_value()

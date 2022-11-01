@@ -10,7 +10,8 @@ class OwnProgressbar(QProgressBar):
         self.setStyle(QStyleFactory.create('Fusion'))
         self.setAlignment(Qt.AlignCenter)
         self.setFormat('Loading... %p%')
-        self.setRange(0, 100)
+        self.setMinimum(0)
+        self.setMaximum(100)
         # create animation
         self.create_panimation()
         # set a status
@@ -25,11 +26,13 @@ class OwnProgressbar(QProgressBar):
 
     def set_value(self):
         if self.allow_next:
-            print('a')
-            self.reset()
+            self.old_value = -1
             self.allow_next = False
-            for i in range( 101):
-                QTimer.singleShot(20 * i, lambda x=i: self.setValue(x))
+            for i in range(101):
+                QTimer.singleShot(20 * i, lambda x=i: self.test(x))
+
+    def test(self, x):
+        self.setValue(x)
 
     def value_change(self, _value):
         #if self.isMaximized(): isMaximized not useful
