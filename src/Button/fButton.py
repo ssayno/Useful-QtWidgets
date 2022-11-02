@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-import typing
-from PyQt5.QtCore import QAbstractAnimation, QEvent, QPoint, QPointF, QPropertyAnimation, QVariant, QVariantAnimation, Qt
-from PyQt5.QtGui import QBrush, QColor, QConicalGradient, QLinearGradient, QMouseEvent, QPaintEvent, QPainter, QPalette, QPen, QRadialGradient
-from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtCore import QAbstractAnimation, QEvent, QPoint, QPointF, QPropertyAnimation, QVariantAnimation, Qt
+from PyQt5.QtGui import QBrush, QColor, QConicalGradient, QIcon, QLinearGradient, QPaintEvent, QPainter, QPalette, QPen, QRadialGradient
+from PyQt5.QtWidgets import QLabel, QPushButton, QToolButton
 
 basic_style = '''\
 QPushButton:hover{
@@ -157,3 +156,35 @@ class ELAnimationQPushButton(QPushButton):
         self._animation.setDirection(QAbstractAnimation.Forward)
         self._animation.start()
         return super().leaveEvent(a0)
+
+
+class PaletteButton(QPushButton):
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self.setMinimumWidth(100)
+        self.setMinimumHeight(100)
+        # self.setDisabled(True)
+        self.changePalette()
+        self.setAutoFillBackground(True)
+
+    def changePalette(self):
+        palette = self.palette()
+        palette.setColor(QPalette.ButtonText, QColor('red'))
+        palette.setColor(QPalette.Button, QColor('green'))
+        palette.setCurrentColorGroup(QPalette.Inactive)
+        palette.setColor(QPalette.Inactive, QPalette.ButtonText, QColor('red'))
+        palette.setColor(QPalette.Inactive, QPalette.Button, QColor('white'))
+        self.setPalette(palette)
+
+    def change_status(self):
+        if self.isEnabled():
+            self.setEnabled(False)
+        else:
+            self.setEnabled(True)
+            palette = self.palette()
+            linear = QLinearGradient(0, 0, self.width(), self.height())
+            linear.setColorAt(0, QColor('Red'))
+            linear.setColorAt(0.4, QColor('grey'))
+            linear.setColorAt(1, QColor('white'))
+            palette.setBrush(QPalette.Active, QPalette.Button, QBrush(linear))
+            self.setPalette(palette)

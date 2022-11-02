@@ -2,9 +2,10 @@
 import sys
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QFrame, QGridLayout, QHBoxLayout, QLabel, QMainWindow, QApplication, QPushButton, QSplitter, QStackedWidget, QToolTip, QVBoxLayout, QWidget
+from src.Widgets.Day_4.main import Day_Four
+from src.Widgets.Day_2.main import Day_Two
 from src.progressbar import OwnProgressbar
-from src.Button.fButton import AnimationQPushButton, ConicalButton, ELAnimationQPushButton, LinerButton, RadialButton
-
+from src.Button.fButton import PaletteButton
 
 class MainUI(QMainWindow):
     def __init__(self):
@@ -22,18 +23,22 @@ class MainUI(QMainWindow):
         self.spl = QSplitter(self)
         self.cw_layout.addWidget(self.spl)
         #
+        self.set_day_button()
         self.sub_stack_widget = QStackedWidget()
         # create day button frame
-        self.set_day_button()
         self.spl.addWidget(self.sub_stack_widget)
         # first day
         self.add_first_day_widget()
         # second day
         self.add_second_day_widget()
+        #
+        self.add_third_day_widget()
+        #
+        self.add_fourth_day_widget()
         # connect button with slot func
         self.connect_day_button_with_slot_func()
         # time
-        self.sub_stack_widget.setCurrentWidget(self.second_day)
+        self.sub_stack_widget.setCurrentWidget(self.four_day)
 
     def set_day_button(self):
         self.day_frame = QFrame(self)
@@ -42,10 +47,18 @@ class MainUI(QMainWindow):
         self.spl.addWidget(self.day_frame)
         self.day_layout = QGridLayout()
         self.day_frame.setLayout(self.day_layout)
+        # first button
         self.first_day_button = QPushButton("First Day")
         self.day_layout.addWidget(self.first_day_button)
+        # second button
         self.second_day_button = QPushButton("Second Day")
         self.day_layout.addWidget(self.second_day_button)
+        # third button
+        self.third_day_button = QPushButton("Third Day")
+        self.day_layout.addWidget(self.third_day_button)
+        # fourth button
+        self.fourth_day_button = QPushButton("Fourth Day")
+        self.day_layout.addWidget(self.fourth_day_button)
 
     def connect_day_button_with_slot_func(self):
         self.first_day_button.clicked.connect(
@@ -53,6 +66,12 @@ class MainUI(QMainWindow):
         )
         self.second_day_button.clicked.connect(
             lambda: self.sub_stack_widget.setCurrentWidget(self.second_day)
+        )
+        self.third_day_button.clicked.connect(
+            lambda: self.sub_stack_widget.setCurrentWidget(self.third_day)
+        )
+        self.fourth_day_button.clicked.connect(
+            lambda: self.sub_stack_widget.setCurrentWidget(self.four_day)
         )
 
     def add_first_day_widget(self):
@@ -77,40 +96,28 @@ class MainUI(QMainWindow):
 
     # Mon Oct 31 22:20:56 2022
     def add_second_day_widget(self):
-        self.second_day = QWidget(self)
-        self.second_layout = QVBoxLayout()
-        self.second_layout.setStretchFactor(self, 1)
-        self.second_layout.setContentsMargins(0, 0, 0, 0)
-        self.second_layout.setSpacing(10)
-        self.second_day.setLayout(self.second_layout)
+        self.second_day = Day_Two(self)
         self.sub_stack_widget.addWidget(self.second_day)
+
+    def add_third_day_widget(self):
+        self.third_day = QWidget(self)
+        self.third_day_layout = QVBoxLayout(self.third_day)
+        self.third_day.setLayout(self.third_day_layout)
+        self.third_day_layout.setContentsMargins(0, 0, 0, 0)
         #
-        self.colorful_button = QPushButton("Click Me!")
-        # self.colorful_button.setMinimumHeight(400)
-        self.second_layout.addWidget(self.colorful_button)
+        self.sub_stack_widget.addWidget(self.third_day)
         #
-        self.conical_button = ConicalButton(self)
-        # self.conical_button.setMinimumHeight(400)
-        self.conical_button.setText('Conical Bg Button')
-        self.linear_button = LinerButton(self)
-        # self.linear_button.setMinimumHeight(400)
-        self.linear_button.setText("Linear Bg Button")
+        change_status_button = QPushButton("change status")
+        self.paletteButton = PaletteButton(self.third_day)
+        self.paletteButton.setText('Palette Button')
+        change_status_button.clicked.connect(self.paletteButton.change_status)
         #
-        self.radial_button = RadialButton(self)
-        self.radial_button.setText('Radial Button')
-        # clicked Animation Button
-        self.click_button = AnimationQPushButton(self)
-        self.click_button.setText("click me to shake!")
-        # enter or leave animation Button
-        self.el_button = ELAnimationQPushButton(self)
-        self.el_button.setText("enter or leave show aniamtion")
-        # layout add button
-        self.second_layout.addWidget(self.conical_button)
-        self.second_layout.addWidget(self.linear_button)
-        self.second_layout.addWidget(self.radial_button)
-        self.second_layout.addWidget(self.click_button)
-        self.second_layout.addWidget(self.el_button)
-        #
+        self.third_day_layout.addWidget(change_status_button)
+        self.third_day_layout.addWidget(self.paletteButton)
+
+    def add_fourth_day_widget(self):
+        self.four_day = Day_Four(self)
+        self.sub_stack_widget.addWidget(self.four_day)
 
     def show_progressbar(self):
         self.opb.set_value()
